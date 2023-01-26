@@ -30,7 +30,7 @@ jobs:
         if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v3
         with:
-          name: node-artifact
+          name: node
           path: node   
 
       - name: Download node artifact
