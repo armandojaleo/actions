@@ -65,7 +65,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.0
         with:
           type: 'zip'
-          filename: 'node-sample.zip'
+          filename: 'node.zip'
 
       - uses: dev-drprasad/delete-older-releases@v0.2.0
         with:
@@ -78,6 +78,79 @@ jobs:
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: node-sample.zip
-          tag: node
-          name: node
+          allowUpdates: true
+          artifacts: node.zip
+          tag: samples
+          name: samples
+
+  create-php-artifact:
+    name: Create PHP artifact
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: PHP files changed check
+        id: php-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: php/**
+
+      - name: Upload PHP artifact
+        if: steps.php-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: php-artifact
+          path: php
+
+      - name: Check exist zip file
+        if: steps.php-files.outputs.any_changed == 'false'
+        run: |
+          echo "No files modified"
+          exit 1
+
+  create-php-release:
+    name: Create PHP release
+    needs: create-php-artifact
+    if: |
+      always() && 
+      !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Clean workspace
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - name: Download php artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: php-artifact
+
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.0
+        with:
+          type: 'zip'
+          filename: 'php.zip'
+
+      - uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          repo: ${{ github.repository }}
+          keep_latest: 0
+          delete_tag_pattern: php
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Create PHP release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: php.zip
+          tag: samples
+          name: samples
