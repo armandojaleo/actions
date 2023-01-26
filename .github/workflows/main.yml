@@ -11,95 +11,36 @@ on:
       - 'main'
 
 jobs:
-  # release-node:
-  #     runs-on: ubuntu-latest
-  #     permissions:
-  #       contents: write
-  #     steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: "node/**"
-  #         tag: ${{ github.ref }}
-
-  # release-php:
-  #     runs-on: ubuntu-latest
-  #     permissions:
-  #       contents: write
-  #     steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: "php/**"
-  #         tag: ${{ github.ref }}
-  #if_merged:
-  #  if: github.event.pull_request.merged == true
-  create-artifacts:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # - name: node sample
-      #   id: node-files
-      #   uses: tj-actions/changed-files@v35
-      #   with:
-      #     files: node/**
-      # - name: if any file(s) in node sample change
-      #   if: steps.node-files.outputs.any_changed == 'true'
-      #   run: |
-      #     echo "One or more files in the docs folder has changed."
-      #     echo "List all the files that have changed: ${{ steps.node-files.outputs.all_changed_files }}"
-      - uses: actions/upload-artifact@v3
-        # if: steps.node-files.outputs.any_changed == 'true'
-        with:
-          name: node
-          path: node   
-
-      # - name: php sample
-      #   id: php-files
-      #   uses: tj-actions/changed-files@v35
-      #   with:
-      #     files: php/**
-      # - name: if any file(s) in php sample change
-      #   if: steps.php-files.outputs.any_changed == 'true'
-      #   run: |
-      #     echo "One or more files in the docs folder has changed."
-      #     echo "List all the files that have changed: ${{ steps.php-files.outputs.all_changed_files }}"
-      - uses: actions/upload-artifact@v3
-        # if: steps.php-files.outputs.any_changed == 'true'
-        with:
-          name: php
-          path: php
-  
-  release-node:
+  create-node-release:
     name: Release Node
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: create-artifacts
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Node files changed check
+        id: node-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: node/**
+
+      - name: Upload Node artifact if exist files changed
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: node
+          path: node   
+
       - name: Download node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/download-artifact@v3
         with:
           name: node
-      - name: Create node release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: node-v${{ github.run_number }}
 
-  release-php:
-    name: Release PHP
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    needs: create-artifacts
-    steps:
-      - name: Download PHP artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: php
-      - name: Create PHP release
+      - name: Create Node release
         uses: ncipollo/release-action@v1
-        with: 
-          tag: php-v${{ github.run_number }}
+        with:
+          artifact: node
+          tag: node-v${{ github.run_number }}
