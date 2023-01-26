@@ -41,20 +41,16 @@ jobs:
           name: node
           path: node
 
-      - name: Archive Release
-        uses: thedoctor0/zip-release@0.7.0
-        with:
-          type: 'zip'
-          path: node
-          filename: 'node.zip'
-
-      - name: Display structure of downloaded files
-        run: ls -a
-        working-directory: node
+      # - name: Archive Release
+      #   uses: thedoctor0/zip-release@0.7.0
+      #   with:
+      #     type: 'zip'
+      #     path: node
+      #     filename: 'node.zip'
 
       - name: Create Node release
         if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: node.zip
+          artifacts: ${{steps.download.outputs.download-path}}
           tag: node-v${{ github.run_number }}
