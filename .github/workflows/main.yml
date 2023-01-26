@@ -59,6 +59,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.0
         with:
           type: 'zip'
+          path: artifacts
           filename: 'node-sample.zip'
 
       - name: Create Node release
