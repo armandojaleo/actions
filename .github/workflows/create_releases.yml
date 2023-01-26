@@ -70,7 +70,6 @@ jobs:
       - name: Archive Node
         uses: thedoctor0/zip-release@0.7.0
         with:
-          directory: node
           path: node
           type: 'zip'
           filename: 'node.zip'
@@ -84,7 +83,6 @@ jobs:
       - name: Archive PHP
         uses: thedoctor0/zip-release@0.7.0
         with:
-          directory: php
           path: php
           type: 'zip'
           filename: 'php.zip'
