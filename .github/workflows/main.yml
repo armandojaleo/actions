@@ -48,6 +48,10 @@ jobs:
           path: node
           filename: 'node.zip'
 
+      - name: Display structure of downloaded files
+        run: ls -a
+        working-directory: node
+
       - name: Create Node release
         if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
