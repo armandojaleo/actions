@@ -30,8 +30,8 @@ jobs:
         if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v3
         with:
-          name: node
-          path: node   
+          name: node-artifact
+          path: artifacts
 
       - name: Check exist zip file
         if: steps.node-files.outputs.any_changed == 'false'
@@ -52,20 +52,19 @@ jobs:
       - name: Download node artifact
         uses: actions/download-artifact@v3
         with:
-          name: node
-          path: node
+          name: node-artifact
+          path: artifacts
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.0
         with:
           type: 'zip'
-          path: node
-          filename: 'node.zip'
+          filename: 'node-sample.zip'
 
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: node.zip
+          artifacts: node-sample.zip
           tag: node-v${{ github.run_number }}
           name: node-v${{ github.run_number }}
           makeLatest: true
