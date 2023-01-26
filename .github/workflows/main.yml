@@ -63,7 +63,6 @@ jobs:
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
-          removeArtifacts: true
           artifacts: node-sample.zip
           tag: node-sample-v0.${{ github.run_number }}
-          name: node-sample-v0.${{ github.run_number }}
+          name: node
