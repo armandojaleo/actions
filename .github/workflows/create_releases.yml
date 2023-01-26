@@ -67,9 +67,10 @@ jobs:
           name: node-artifact
           path: node
 
-      - name: Archive Release
+      - name: Archive Node
         uses: thedoctor0/zip-release@0.7.0
         with:
+          path: node
           type: 'zip'
           filename: 'node.zip'
 
@@ -79,9 +80,10 @@ jobs:
           name: php-artifact
           path: php
 
-      - name: Archive Release
+      - name: Archive PHP
         uses: thedoctor0/zip-release@0.7.0
         with:
+          path: php
           type: 'zip'
           filename: 'php.zip'
 
@@ -95,7 +97,6 @@ jobs:
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
-          allowUpdates: true
-          artifacts: node.zip, php.zip
+          artifacts: node/node.zip, php/php.zip
           tag: samples
           name: samples
