@@ -34,10 +34,16 @@ jobs:
           path: node
           filename: 'node.zip'
 
+      - name: Check exist zip file
+        if: steps.node-files.outputs.any_changed == 'false'
+        run: exit 1
+
   create-node-release:
     name: Create Node release
     needs: create-node-artifact
-    if: needs.create-node-artifact.steps.node-files.outputs.any_changed == 'true'
+    if: |
+      always() && 
+      !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
       contents: write
