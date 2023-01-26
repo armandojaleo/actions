@@ -41,15 +41,16 @@ jobs:
           name: node
           path: node
 
-      # - name: Archive Release
-      #   uses: thedoctor0/zip-release@0.7.0
-      #   with:
-      #     type: 'zip'
-      #     path: node
-      #     filename: 'node.zip'
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.0
+        with:
+          type: 'zip'
+          path: node
+          filename: 'node.zip'
 
       - name: Display structure of files
         run: ls -a
+        working-directory: node
 
       - name: Create Node release
         if: steps.node-files.outputs.any_changed == 'true'
