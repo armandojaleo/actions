@@ -11,8 +11,8 @@ on:
       - 'main'
 
 jobs:
-  create-node-release:
-    name: Release Node
+  create-node-artifact:
+    name: Create Node artifact
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -26,35 +26,26 @@ jobs:
         with:
           files: node/**
 
-      - name: Upload Node artifact if exist files changed
-        if: steps.node-files.outputs.any_changed == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: node
-          path: node   
-
-      - name: Download node artifact
-        if: steps.node-files.outputs.any_changed == 'true'
-        id: download
-        uses: actions/download-artifact@v3
-        with:
-          name: node
-          path: node
-
       - name: Archive Release
+        if: steps.node-files.outputs.any_changed == 'true'
         uses: thedoctor0/zip-release@0.7.0
         with:
           type: 'zip'
           path: node
           filename: 'node.zip'
 
-      - name: Display structure of files
-        run: ls -a
-        working-directory: node
-
+  create-node-release:
+    name: Create Node release
+    needs: create-node-artifact
+    if: create-node-artifact.steps.node-files.outputs.any_changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
       - name: Create Node release
-        if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{steps.download.outputs.download-path}}
+          artifacts: node.zip
           tag: node-v${{ github.run_number }}
+          name: node-v${{ github.run_number }}
+          makeLatest: true
