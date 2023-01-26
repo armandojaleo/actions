@@ -49,6 +49,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Clean workspace
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
       - name: Download node artifact
         uses: actions/download-artifact@v3
         with:
@@ -60,9 +67,17 @@ jobs:
           type: 'zip'
           filename: 'node-sample.zip'
 
+      - uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          repo: ${{ github.repository }}
+          keep_latest: 0
+          delete_tag_pattern: node
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
           artifacts: node-sample.zip
-          tag: node-sample-v0.${{ github.run_number }}
+          tag: node
           name: node
