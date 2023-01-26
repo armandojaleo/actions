@@ -39,10 +39,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node
+          path: node
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: node
 
       - name: Create Node release
         if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{steps.download.outputs.download-path}}/node.zip
+          artifacts: ${{steps.download.outputs.download-path}}
           tag: node-v${{ github.run_number }}
