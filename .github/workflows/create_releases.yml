@@ -1,4 +1,4 @@
-name: main
+name: Create releases
  
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
       - 'main'
 
 jobs:
-  create-artifact:
+  create-artifacts:
     name: Create artifacts
     runs-on: ubuntu-latest
     permissions:
@@ -49,7 +49,7 @@ jobs:
 
   create-release:
     name: Create release
-    needs: create-node-artifact
+    needs: create-artifacts
     runs-on: ubuntu-latest
     permissions:
       contents: write
