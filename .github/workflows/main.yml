@@ -35,13 +35,14 @@ jobs:
 
       - name: Download node artifact
         if: steps.node-files.outputs.any_changed == 'true'
+        id: download
         uses: actions/download-artifact@v3
         with:
-          name: node-artifact
+          name: node
 
       - name: Create Node release
         if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: node-artifact
+          artifacts: ${{steps.download.outputs.download-path}}node
           tag: node-v${{ github.run_number }}
