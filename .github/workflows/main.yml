@@ -44,5 +44,5 @@ jobs:
         if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{steps.download.outputs.download-path}}node
+          artifacts: ${{steps.download.outputs.download-path}}/node
           tag: node-v${{ github.run_number }}
