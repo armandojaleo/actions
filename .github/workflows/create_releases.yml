@@ -20,27 +20,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Node files changed check
-        id: node-files
-        uses: tj-actions/changed-files@v35
-        with:
-          files: node/**
+      # - name: Node files changed check
+      #   id: node-files
+      #   uses: tj-actions/changed-files@v35
+      #   with:
+      #     files: node/**
 
       - name: Upload Node artifact
-        if: steps.node-files.outputs.any_changed == 'true'
+        # if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: node-artifact
           path: node
 
-      - name: PHP files changed check
-        id: php-files
-        uses: tj-actions/changed-files@v35
-        with:
-          files: php/**
+      # - name: PHP files changed check
+      #   id: php-files
+      #   uses: tj-actions/changed-files@v35
+      #   with:
+      #     files: php/**
 
       - name: Upload PHP artifact
-        if: steps.php-files.outputs.any_changed == 'true'
+        # if: steps.php-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: php-artifact
