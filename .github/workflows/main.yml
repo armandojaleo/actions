@@ -37,7 +37,7 @@ jobs:
   create-node-release:
     name: Create Node release
     needs: create-node-artifact
-    if: jobs.create-node-artifact.steps.node-files.outputs.any_changed == 'true'
+    if: needs.create-node-artifact.steps.node-files.outputs.any_changed == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
