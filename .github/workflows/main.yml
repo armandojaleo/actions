@@ -42,5 +42,5 @@ jobs:
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
-          artifact: node
+          artifacts: node
           tag: node-v${{ github.run_number }}
