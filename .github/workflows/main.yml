@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: node-artifact
-          path: artifacts
+          path: node
 
       - name: Check exist zip file
         if: steps.node-files.outputs.any_changed == 'false'
@@ -53,13 +53,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-artifact
-          path: artifacts
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.0
         with:
           type: 'zip'
-          path: artifacts
           filename: 'node-sample.zip'
 
       - name: Create Node release
