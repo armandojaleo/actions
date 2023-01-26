@@ -33,22 +33,6 @@ jobs:
           name: node
           path: node   
 
-      - name: Download node artifact
-        if: steps.node-files.outputs.any_changed == 'true'
-        id: download
-        uses: actions/download-artifact@v3
-        with:
-          name: node
-          path: node
-
-      - name: Archive Release
-        if: steps.node-files.outputs.any_changed == 'true'
-        uses: thedoctor0/zip-release@0.7.0
-        with:
-          type: 'zip'
-          path: node
-          filename: 'node.zip'
-
       - name: Check exist zip file
         if: steps.node-files.outputs.any_changed == 'false'
         run: |
@@ -65,6 +49,22 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Download node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          name: node
+          path: node
+
+      - name: Archive Release
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: thedoctor0/zip-release@0.7.0
+        with:
+          type: 'zip'
+          path: node
+          filename: 'node.zip'
+
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
