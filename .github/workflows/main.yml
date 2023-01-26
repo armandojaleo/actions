@@ -51,7 +51,9 @@ jobs:
 
       - name: Check exist zip file
         if: steps.node-files.outputs.any_changed == 'false'
-        run: exit 1
+        run: |
+          echo "No files modified"
+          exit 1
 
   create-node-release:
     name: Create Node release
