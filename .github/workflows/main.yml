@@ -30,17 +30,18 @@ jobs:
         if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v3
         with:
-          name: node
+          name: node-artifact
           path: node   
 
       - name: Download node artifact
         if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/download-artifact@v3
         with:
-          name: node
+          name: node-artifact
 
       - name: Create Node release
+        if: steps.node-files.outputs.any_changed == 'true'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: node
+          artifacts: node-artifact
           tag: node-v${{ github.run_number }}
