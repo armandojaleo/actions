@@ -1,0 +1,25 @@
+{
+  "name": "actions-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "nodemon": "^2.0.20"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/armandojaleo/actions-node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/armandojaleo/actions-node/issues"
+  },
+  "homepage": "https://github.com/armandojaleo/actions-node#readme"
+}
