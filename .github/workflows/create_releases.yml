@@ -97,6 +97,6 @@ jobs:
       - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: node/node.zip, php/php.zip
+          artifacts: node.zip, php.zip
           tag: samples
           name: samples
