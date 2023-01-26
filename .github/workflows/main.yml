@@ -11,8 +11,8 @@ on:
       - 'main'
 
 jobs:
-  create-node-artifact:
-    name: Create Node artifact
+  create-artifact:
+    name: Create artifacts
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,18 +33,23 @@ jobs:
           name: node-artifact
           path: node
 
-      - name: Check exist zip file
-        if: steps.node-files.outputs.any_changed == 'false'
-        run: |
-          echo "No files modified"
-          exit 1
+      - name: PHP files changed check
+        id: php-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: php/**
 
-  create-node-release:
-    name: Create Node release
+      - name: Upload PHP artifact
+        if: steps.php-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: php-artifact
+          path: php
+
+
+  create-release:
+    name: Create release
     needs: create-node-artifact
-    if: |
-      always() && 
-      !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -67,67 +72,6 @@ jobs:
           type: 'zip'
           filename: 'node.zip'
 
-      - uses: dev-drprasad/delete-older-releases@v0.2.0
-        with:
-          repo: ${{ github.repository }}
-          keep_latest: 0
-          delete_tag_pattern: node
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: Create Node release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: node.zip
-          tag: samples
-          name: samples
-
-  create-php-artifact:
-    name: Create PHP artifact
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: PHP files changed check
-        id: php-files
-        uses: tj-actions/changed-files@v35
-        with:
-          files: php/**
-
-      - name: Upload PHP artifact
-        if: steps.php-files.outputs.any_changed == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: php-artifact
-          path: php
-
-      - name: Check exist zip file
-        if: steps.php-files.outputs.any_changed == 'false'
-        run: |
-          echo "No files modified"
-          exit 1
-
-  create-php-release:
-    name: Create PHP release
-    needs: create-php-artifact
-    if: |
-      always() && 
-      !contains(needs.*.result, 'failure')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Clean workspace
-        run: |
-          ls -la ./
-          rm -rf ./* || true
-          rm -rf ./.??* || true
-          ls -la ./
-
       - name: Download php artifact
         uses: actions/download-artifact@v3
         with:
@@ -143,14 +87,13 @@ jobs:
         with:
           repo: ${{ github.repository }}
           keep_latest: 0
-          delete_tag_pattern: php
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Create PHP release
+      - name: Create Node release
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: php.zip
+          artifacts: node.zip, php.zip
           tag: samples
           name: samples
