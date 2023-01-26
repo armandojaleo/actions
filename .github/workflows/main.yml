@@ -26,6 +26,21 @@ jobs:
         with:
           files: node/**
 
+      - name: Upload Node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: node
+          path: node   
+
+      - name: Download node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          name: node
+          path: node
+
       - name: Archive Release
         if: steps.node-files.outputs.any_changed == 'true'
         uses: thedoctor0/zip-release@0.7.0
