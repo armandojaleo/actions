@@ -1,4 +1,4 @@
-name: Create package Node
+name: Create package All
  
 on:
   workflow_dispatch:

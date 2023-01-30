@@ -1,4 +1,4 @@
-name: Create package Node
+name: Create package PHP
  
 on:
   workflow_dispatch:
