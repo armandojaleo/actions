@@ -33,9 +33,14 @@ jobs:
         with:
           ref: packages
 
-      - name: Push Node to packages branch
+      - name: Move Zip file
         run: |
           mv ../node.zip .
+
+      - name: Push Node to packages branch
+        run: |
+          git config --global user.email "armando@armandojaleo.com"
+          git config --global user.name "armandojaleo"
           git add node.zip
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
           git push packages
