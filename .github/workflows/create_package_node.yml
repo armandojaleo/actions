@@ -28,7 +28,7 @@ jobs:
         run: |
            zip -r ../node.zip node
 
-      - name: Checkout main branch
+      - name: Checkout packages branch
         uses: actions/checkout@v3
         with:
           ref: packages
