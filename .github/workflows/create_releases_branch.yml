@@ -1,0 +1,100 @@
+name: Create releases branch
+ 
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    types:
+      - closed
+
+    branches:
+      - 'main'
+
+jobs:
+  #if_merged:
+  create-push-by-sample:
+    name: Create artifacts and push to package branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Node files changed check
+        id: node-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: node/**
+
+      - name: Upload Node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-artifact
+          path: node
+
+      - name: Download node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/download-artifact@v3
+        with:
+          name: node-artifact
+          path: node
+
+      - name: Archive Node
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: thedoctor0/zip-release@0.7.0
+        with:
+          path: node
+          type: 'zip'
+          filename: 'node.zip'
+
+      - name: Push Node to packages branch
+        if: steps.node-files.outputs.any_changed == 'true'
+        run: |
+          git config --local user.name armandojaleo
+          git config --local user.email armando@armandojaleo.com
+          git checkout packages
+          git add node.zip
+          git commit -m "Add new Node package"
+          git push
+
+      - name: PHP files changed check
+        id: php-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: php/**
+
+      - name: Upload PHP artifact
+        if: steps.php-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: php-artifact
+          path: php
+      
+      - name: Download php artifact
+        if: steps.php-files.outputs.any_changed == 'true'
+        uses: actions/download-artifact@v3
+        with:
+          name: php-artifact
+          path: php
+
+      - name: Archive PHP
+        if: steps.php-files.outputs.any_changed == 'true'
+        uses: thedoctor0/zip-release@0.7.0
+        with:
+          path: php
+          type: 'zip'
+          filename: 'php.zip'
+
+      - name: Push PHP to packages branch
+        if: steps.php-files.outputs.any_changed == 'true'
+        run: |
+          git config --local user.name armandojaleo
+          git config --local user.email armando@armandojaleo.com
+          git checkout packages
+          git add php.zip
+          git commit -m "Add new PHP package"
+          git push
+
+  
