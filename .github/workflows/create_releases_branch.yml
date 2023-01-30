@@ -18,8 +18,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout repository
+      - name: Checkout main
         uses: actions/checkout@v3
+        with:
+          ref: main
 
       - name: Node files changed check
         id: node-files
@@ -33,6 +35,11 @@ jobs:
         with:
           name: node-artifact
           path: node
+
+      - name: Checkout packages
+        uses: actions/checkout@v3
+        with:
+          ref: packages
 
       - name: Download node artifact
         if: steps.node-files.outputs.any_changed == 'true'
@@ -51,7 +58,7 @@ jobs:
 
       - name: List files in the repository
         run: |
-            ls ${{ github.workspace }}
+            ls
 
       # - name: Push Node to packages branch
       #   if: steps.node-files.outputs.any_changed == 'true'
@@ -62,6 +69,11 @@ jobs:
       #     git add node.zip
       #     git commit -m "Add new Node package"
       #     git push
+
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
 
       - name: PHP files changed check
         id: php-files
@@ -75,6 +87,11 @@ jobs:
         with:
           name: php-artifact
           path: php
+
+      - name: Checkout packages
+        uses: actions/checkout@v3
+        with:
+          ref: packages
       
       - name: Download php artifact
         if: steps.php-files.outputs.any_changed == 'true'
