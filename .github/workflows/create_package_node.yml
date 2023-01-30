@@ -20,16 +20,21 @@ jobs:
       contents: write
     steps:
       - name: Checkout main branch
-        run: |
-          git checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
 
       - name: Zip Node archive
         run: |
            zip -r node.zip node
 
-      - name: Push Node Zip to packages branch
+      - name: Checkout packages branch
+        uses: actions/checkout@v3
+        with:
+          ref: packages
+
+      - name: Push Node to packages branch
         run: |
-          git checkout packages
           git add node.zip
           git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
           git push
