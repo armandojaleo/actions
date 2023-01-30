@@ -1,0 +1,73 @@
+name: Create package Node
+ 
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - closed
+
+    branches:
+      - 'main'
+
+jobs:
+  if_merged:
+    name: Create artifacts and push to package branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Node files changed check
+        id: node-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: node/**
+
+      - name: List all Node changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      - name: Upload Node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-artifact
+          path: node
+
+      - name: Checkout packages
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/checkout@v3
+        with:
+          ref: packages
+
+      - name: Download node artifact
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: actions/download-artifact@v3
+        with:
+          name: node-artifact
+          path: node
+
+      - name: Archive Node
+        if: steps.node-files.outputs.any_changed == 'true'
+        uses: thedoctor0/zip-release@0.7.0
+        with:
+          path: node
+          type: 'zip'
+          filename: 'node.zip'
+
+      - name: Push Node to packages branch
+        if: steps.node-files.outputs.any_changed == 'true'
+        run: |
+          git config --local user.name armandojaleo
+          git config --local user.email armando@armandojaleo.com
+          git checkout packages
+          git add node.zip
+          git commit -m "Add new Node package"
+          git push
+  
