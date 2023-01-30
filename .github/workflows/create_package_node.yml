@@ -2,12 +2,14 @@ name: Create package Node
  
 on:
   workflow_dispatch:
+  push:
   pull_request:
     types:
       - closed
-
     branches:
       - 'main'
+    paths:
+      - 'node/**'
 
 jobs:
   if_merged:
@@ -18,56 +20,15 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v3
-        with:
-          ref: main
 
-      - name: Node files changed check
-        id: node-files
-        uses: tj-actions/changed-files@v35
-        with:
-          files: node/**
-
-      - name: List all Node changed files
+      - name: Zip archive Node
         run: |
-          for file in ${{ steps.node-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-
-      - name: Upload Node artifact
-        if: steps.node-files.outputs.any_changed == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-artifact
-          path: node
-
-      - name: Checkout packages
-        if: steps.node-files.outputs.any_changed == 'true'
-        uses: actions/checkout@v3
-        with:
-          ref: packages
-
-      - name: Download node artifact
-        if: steps.node-files.outputs.any_changed == 'true'
-        uses: actions/download-artifact@v3
-        with:
-          name: node-artifact
-          path: node
-
-      - name: Archive Node
-        if: steps.node-files.outputs.any_changed == 'true'
-        uses: thedoctor0/zip-release@0.7.0
-        with:
-          path: node
-          type: 'zip'
-          filename: 'node.zip'
+           zip -r node.zip node
 
       - name: Push Node to packages branch
-        if: steps.node-files.outputs.any_changed == 'true'
         run: |
-          git config --local user.name armandojaleo
-          git config --local user.email armando@armandojaleo.com
           git checkout packages
           git add node.zip
-          git commit -m "Add new Node package"
+          git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
           git push
   

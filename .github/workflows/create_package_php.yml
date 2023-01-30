@@ -2,12 +2,14 @@ name: Create package PHP
  
 on:
   workflow_dispatch:
+  push:
   pull_request:
     types:
       - closed
-
     branches:
       - 'main'
+    paths:
+      - 'php/**'
 
 jobs:
   if_merged:
@@ -18,57 +20,15 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v3
-        with:
-          ref: main
 
-      - name: PHP files changed check
-        id: php-files
-        uses: tj-actions/changed-files@v35
-        with:
-          files: php/**
-
-      - name: List all PHP changed files
+      - name: Zip archive PHP
         run: |
-          for file in ${{ steps.php-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-
-      - name: Upload PHP artifact
-        if: steps.php-files.outputs.any_changed == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: php-artifact
-          path: php
-
-      - name: Checkout packages
-        if: steps.php-files.outputs.any_changed == 'true'
-        uses: actions/checkout@v3
-        with:
-          ref: packages
-
-      - name: Download php artifact
-        if: steps.php-files.outputs.any_changed == 'true'
-        uses: actions/download-artifact@v3
-        with:
-          name: php-artifact
-          path: php
-
-      - name: Archive PHP
-        if: steps.php-files.outputs.any_changed == 'true'
-        uses: thedoctor0/zip-release@0.7.0
-        with:
-          path: php
-          type: 'zip'
-          filename: 'php.zip'
+           zip -r php.zip php
 
       - name: Push PHP to packages branch
-        if: steps.php-files.outputs.any_changed == 'true'
         run: |
-          git config --local user.name armandojaleo
-          git config --local user.email armando@armandojaleo.com
           git checkout packages
           git add php.zip
-          git commit -m "Add new PHP package"
+          git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
           git push
-
   
