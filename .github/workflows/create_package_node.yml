@@ -12,24 +12,26 @@ on:
       - 'node/**'
 
 jobs:
-  if_merged:
-    name: Create artifacts and push to package branch
+  create_node_package_and_push:
+    name: Create Node package and push
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v3
+      - name: Checkout main branch
+        run: |
+          git checkout main
 
-      - name: Zip archive Node
+      - name: Zip Node archive
         run: |
            zip -r node.zip node
-           ls -a
 
-      - name: Push Node to packages branch
+      - name: Push Node Zip to packages branch
         run: |
-          git add node.zip
           git checkout packages
-          ls -a
+          git add node.zip
+          git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
+          git push
           
   
