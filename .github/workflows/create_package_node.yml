@@ -32,10 +32,11 @@ jobs:
         run: |
           git config --global user.email "armando@armandojaleo.com"
           git config --global user.name "armandojaleo"
+          git fetch
           git checkout packages
           git pull
           git add node.zip
-          git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
+          git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
           git push
           
   
