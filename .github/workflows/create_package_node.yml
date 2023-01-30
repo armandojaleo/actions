@@ -35,6 +35,6 @@ jobs:
           git checkout -b origin/packages
           git add node.zip
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
-          git push
+          git push --set-upstream origin origin/packages
           
   
