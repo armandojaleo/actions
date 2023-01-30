@@ -49,15 +49,19 @@ jobs:
           type: 'zip'
           filename: 'node.zip'
 
-      - name: Push Node to packages branch
-        if: steps.node-files.outputs.any_changed == 'true'
+      - name: List files in the repository
         run: |
-          git config --local user.name armandojaleo
-          git config --local user.email armando@armandojaleo.com
-          git checkout packages
-          git add node.zip
-          git commit -m "Add new Node package"
-          git push
+            ls ${{ github.workspace }}
+
+      # - name: Push Node to packages branch
+      #   if: steps.node-files.outputs.any_changed == 'true'
+      #   run: |
+      #     git config --local user.name armandojaleo
+      #     git config --local user.email armando@armandojaleo.com
+      #     git checkout packages
+      #     git add node.zip
+      #     git commit -m "Add new Node package"
+      #     git push
 
       - name: PHP files changed check
         id: php-files
@@ -87,14 +91,14 @@ jobs:
           type: 'zip'
           filename: 'php.zip'
 
-      - name: Push PHP to packages branch
-        if: steps.php-files.outputs.any_changed == 'true'
-        run: |
-          git config --local user.name armandojaleo
-          git config --local user.email armando@armandojaleo.com
-          git checkout packages
-          git add php.zip
-          git commit -m "Add new PHP package"
-          git push
+      # - name: Push PHP to packages branch
+      #   if: steps.php-files.outputs.any_changed == 'true'
+      #   run: |
+      #     git config --local user.name armandojaleo
+      #     git config --local user.email armando@armandojaleo.com
+      #     git checkout packages
+      #     git add php.zip
+      #     git commit -m "Add new PHP package"
+      #     git push
 
   
