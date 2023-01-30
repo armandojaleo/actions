@@ -1,7 +1,6 @@
 name: Create package PHP
  
 on:
-  workflow_dispatch:
   pull_request:
     types:
       - closed
@@ -11,23 +10,37 @@ on:
       - 'php/**'
 
 jobs:
-  if_merged:
-    name: Create artifacts and push to package branch
+  create_php_package_and_push:
+    name: Create PHP package and push
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout main
+      - name: Checkout main branch
         uses: actions/checkout@v3
+        with:
+          ref: main
 
-      - name: Zip archive PHP
+      - name: Zip PHP archive
         run: |
-           zip -r php.zip php
+           zip -r ../php.zip php
+
+      - name: Checkout packages branch
+        uses: actions/checkout@v3
+        with:
+          ref: packages
+
+      - name: Move Zip file to workspace
+        run: |
+          mv ../php.zip .
 
       - name: Push PHP to packages branch
         run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "github-action@users.noreply.github.com"
           git add php.zip
-          git checkout packages
           git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
           git push
+          
   

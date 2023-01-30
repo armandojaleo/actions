@@ -1,8 +1,6 @@
 name: Create package Node
  
 on:
-  workflow_dispatch:
-  push:
   pull_request:
     types:
       - closed
@@ -14,7 +12,7 @@ on:
 jobs:
   create_node_package_and_push:
     name: Create Node package and push
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,7 +31,7 @@ jobs:
         with:
           ref: packages
 
-      - name: Move Zip file
+      - name: Move Zip file to workspace
         run: |
           mv ../node.zip .
 
