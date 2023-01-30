@@ -2,7 +2,6 @@ name: Create package PHP
  
 on:
   workflow_dispatch:
-  push:
   pull_request:
     types:
       - closed
