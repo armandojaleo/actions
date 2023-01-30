@@ -9,6 +9,6 @@
       "ext-json": "*"
     },
     "scripts": {
-        "start": "php -S localhost:8008 "
+        "start": "php -S localhost:8000"
     }
 }
