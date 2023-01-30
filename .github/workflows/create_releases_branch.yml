@@ -37,6 +37,7 @@ jobs:
           path: node
 
       - name: Checkout packages
+        if: steps.node-files.outputs.any_changed == 'true'
         uses: actions/checkout@v3
         with:
           ref: packages
@@ -56,19 +57,20 @@ jobs:
           type: 'zip'
           filename: 'node.zip'
 
-      - name: List files in the repository
-        run: |
-            ls
-
-      # - name: Push Node to packages branch
+      # - name: List files in the repository
       #   if: steps.node-files.outputs.any_changed == 'true'
       #   run: |
-      #     git config --local user.name armandojaleo
-      #     git config --local user.email armando@armandojaleo.com
-      #     git checkout packages
-      #     git add node.zip
-      #     git commit -m "Add new Node package"
-      #     git push
+      #       ls
+
+      - name: Push Node to packages branch
+        if: steps.node-files.outputs.any_changed == 'true'
+        run: |
+          git config --local user.name armandojaleo
+          git config --local user.email armando@armandojaleo.com
+          git checkout packages
+          git add node.zip
+          git commit -m "Add new Node package"
+          git push
 
       - name: Checkout main
         uses: actions/checkout@v3
@@ -89,6 +91,7 @@ jobs:
           path: php
 
       - name: Checkout packages
+        if: steps.php-files.outputs.any_changed == 'true'
         uses: actions/checkout@v3
         with:
           ref: packages
@@ -108,14 +111,14 @@ jobs:
           type: 'zip'
           filename: 'php.zip'
 
-      # - name: Push PHP to packages branch
-      #   if: steps.php-files.outputs.any_changed == 'true'
-      #   run: |
-      #     git config --local user.name armandojaleo
-      #     git config --local user.email armando@armandojaleo.com
-      #     git checkout packages
-      #     git add php.zip
-      #     git commit -m "Add new PHP package"
-      #     git push
+      - name: Push PHP to packages branch
+        if: steps.php-files.outputs.any_changed == 'true'
+        run: |
+          git config --local user.name armandojaleo
+          git config --local user.email armando@armandojaleo.com
+          git checkout packages
+          git add php.zip
+          git commit -m "Add new PHP package"
+          git push
 
   
