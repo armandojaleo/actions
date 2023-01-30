@@ -1,4 +1,4 @@
-name: Create package PHP
+name: Create Node Package
  
 on:
   pull_request:
@@ -7,11 +7,11 @@ on:
     branches:
       - 'main'
     paths:
-      - 'php/**'
+      - 'node/**'
 
 jobs:
-  create_php_package_and_push:
-    name: Create PHP package and push
+  create_node_package_and_push:
+    name: Create Node package and push
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
@@ -22,25 +22,25 @@ jobs:
         with:
           ref: main
 
-      - name: Zip PHP archive
+      - name: Zip Node files
         run: |
-           zip -r ../php.zip php
+           zip -r ../node.zip node
 
       - name: Checkout packages branch
         uses: actions/checkout@v3
         with:
           ref: packages
 
-      - name: Move Zip file to workspace
+      - name: Move zip Node file to workspace
         run: |
-          mv ../php.zip .
+          mv ../node.zip .
 
-      - name: Push PHP to packages branch
+      - name: Push zip Node file to packages branch
         run: |
           git config --global user.name "Github Actions"
           git config --global user.email "github-action@users.noreply.github.com"
-          git add php.zip
-          git commit -m "Added new PHP package: '${{ github.event.pull_request.title }}'"
+          git add node.zip
+          git commit -m "Added new Node package: '${{ github.event.pull_request.title }}'"
           git push
           
   
