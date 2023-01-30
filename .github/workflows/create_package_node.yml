@@ -28,15 +28,12 @@ jobs:
         run: |
            zip -r node.zip node
 
-      - name: Checkout packages branch
-        uses: actions/checkout@v3
-        with:
-          ref: packages
-
       - name: Push Node to packages branch
         run: |
           git config --global user.email "github-action@users.noreply.github.com"
           git config --global user.name "Github Actions"
+          git checkout packages
+          git pull
           git add node.zip
           git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
           git push
