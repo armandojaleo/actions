@@ -26,17 +26,15 @@ jobs:
 
       - name: Zip Node archive
         run: |
-           zip -r node.zip node
+           zip -r ../node.zip node
 
       - name: Push Node to packages branch
         run: |
           git config --global user.email "armando@armandojaleo.com"
           git config --global user.name "armandojaleo"
+          git checkout packages
+          mv ../node.zip .
           git add node.zip
-          git stash
-          git fetch
-          git checkout -f packages
-          git stash apply
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
           git push --set-upstream packages
           
