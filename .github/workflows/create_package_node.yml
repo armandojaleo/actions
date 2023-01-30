@@ -30,8 +30,8 @@ jobs:
 
       - name: Push Node to packages branch
         run: |
-          git config --global user.email "github-action@users.noreply.github.com"
-          git config --global user.name "Github Actions"
+          git config --global user.email "armando@armandojaleo.com"
+          git config --global user.name "armandojaleo"
           git checkout packages
           git pull
           git add node.zip
