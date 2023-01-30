@@ -32,9 +32,9 @@ jobs:
         run: |
           git config --global user.email "armando@armandojaleo.com"
           git config --global user.name "armandojaleo"
-          git checkout -b origin/packages
+          git checkout -b packages
           git add node.zip
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
-          git push --set-upstream origin origin/packages
+          git push --set-upstream packages
           
   
