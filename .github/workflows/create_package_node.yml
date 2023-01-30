@@ -28,14 +28,16 @@ jobs:
         run: |
            zip -r ../node.zip node
 
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: packages
+
       - name: Push Node to packages branch
         run: |
-          git config --global user.email "armando@armandojaleo.com"
-          git config --global user.name "armandojaleo"
-          git checkout packages
           mv ../node.zip .
           git add node.zip
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
-          git push --set-upstream packages
+          git push packages
           
   
