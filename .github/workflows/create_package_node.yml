@@ -39,10 +39,10 @@ jobs:
 
       - name: Push Node to packages branch
         run: |
-          git config --global user.email "armando@armandojaleo.com"
           git config --global user.name "armandojaleo"
+          git config --global user.email "armando@armandojaleo.com"
           git add node.zip
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
-          git push packages
+          git push
           
   
