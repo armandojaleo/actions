@@ -32,9 +32,11 @@ jobs:
         run: |
           git config --global user.email "armando@armandojaleo.com"
           git config --global user.name "armandojaleo"
+          git add node.zip
+          git stash
           git fetch
           git checkout -f packages
-          git add node.zip
+          git stash apply
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
           git push --set-upstream packages
           
