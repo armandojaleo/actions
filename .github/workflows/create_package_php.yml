@@ -27,8 +27,8 @@ jobs:
 
       - name: Push PHP to packages branch
         run: |
-          git checkout packages
           git add php.zip
+          git checkout packages
           git commit -m "Added new PHP package: '${{ github.event.head_commit.message }}'"
           git push
   

@@ -27,8 +27,8 @@ jobs:
 
       - name: Push Node to packages branch
         run: |
-          git checkout packages
           git add node.zip
+          git checkout packages
           git commit -m "Added new Node package: '${{ github.event.head_commit.message }}'"
           git push
   
